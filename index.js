@@ -62,7 +62,7 @@ app.post('/Shop',async (req, res) =>{
         request = req;
         obj = data;
 
-        console.log("-->"+JSON.stringify(obj));
+        //console.log("-->"+JSON.stringify(obj));
 
 	    requestPostString().catch(console.error);
 	}
@@ -73,21 +73,24 @@ app.post('/Shop',async (req, res) =>{
 
 
 async function requestPostString() {
-        const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-        database = client.db(obj.Database);
-        const collection = database.collection(obj.Collection);
+
 
         try {
-                await client.connect((err) => {
-		                if (err) {
-		                  console.log("connection established not successfully");
-		                } else {
-		                  console.log("connection established successfully");
+                await MongoClient
+                        .connect(uri, {
+                            maxPoolSize: 50,
+                            wtimeoutMS: 2500,
+                        })
+                        .then((client) => {
+                            console.log("connection established successfully");
+                            database = client.db(obj.Database);
+                            const collection = database.collection(obj.Collection);
+                            read_write_to_collection(collection);
+                        })
+                        .catch(error => {
+                             console.log("connection established not successfully");
+                        })
 
-                          read_write_to_collection(collection);
-
-		                }
-		        })
                     
         } catch (e) {
 		   console.error(e);
