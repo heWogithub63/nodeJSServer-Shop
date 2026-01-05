@@ -8,7 +8,6 @@ import { MongoClient, GridFSBucket } from 'mongodb';
 
 const port =  process.env.PORT || 3030;
 const app = express();
-const uri = "mongodb+srv://wh:admin01@cluster0.kmwrpfb.mongodb.net/?retryWrites=true&w=majority";
 
 var collection;
 
@@ -77,7 +76,7 @@ async function requestPostString() {
 
         try {
                 await MongoClient
-                        .connect(uri, {
+                        .connect(obj.URI, {
                             maxPoolSize: 50,
                             wtimeoutMS: 2500,
                         })
